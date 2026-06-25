@@ -6,7 +6,8 @@ module.exports = class CM6UrlPlugin extends Plugin {
     async onload() {
         console.log("🟢 [物理总线] URL 高亮插件加载成功");
 
-        const urlRegex = /([a-z][a-z0-9+.-]*)(:)(\/\/)([^\/\s?#]+)([\/\?#].*)?/gi;
+        // 【修正】排除了右括号 ) 以及空格，防止吞噬 Markdown 链接后的正文
+        const urlRegex = /([a-z][a-z0-9+.-]*)(:)(\/\/)([^\/\s?#\)]+)([\/\?#][^\s\)]*)?/gi;
 
         // ==================== 1. 编辑模式 (CM6) 渲染 ====================
         this.registerEditorExtension(ViewPlugin.fromClass(class {
@@ -55,7 +56,7 @@ module.exports = class CM6UrlPlugin extends Plugin {
             this.processUrlsInElement(element);
         });
 
-        // 【新增/增强】监听工作区激活叶片变化（切换文件/打开新标签页时精准触发）
+        // 监听工作区激活叶片变化
         this.registerEvent(this.app.workspace.on('active-leaf-change', (leaf) => {
             setTimeout(() => {
                 const activeView = leaf?.view?.containerEl;
@@ -83,7 +84,8 @@ module.exports = class CM6UrlPlugin extends Plugin {
     }
 
     processUrlsInElement(rootElement) {
-        const urlRegex = /([a-z][a-z0-9+.-]*)(:)(\/\/)([^\/\s?#]+)([\/\?#].*)?/gi;
+        // 【修正】保持阅读模式下的正则与 CM6 编辑模式完全一致
+        const urlRegex = /([a-z][a-z0-9+.-]*)(:)(\/\/)([^\/\s?#\)]+)([\/\?#][^\s\)]*)?/gi;
         
         // 拦截外部链接与属性面板 URL
         rootElement.querySelectorAll('.external-link').forEach(link => {
