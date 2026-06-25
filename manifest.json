@@ -1,0 +1,9 @@
+{
+    "id": "cm6-url-enhancer",
+    "name": "CM6 URL Highlighting Fix",
+    "version": "1.0.0",
+    "minAppVersion": "0.15.0",
+    "description": "Native CM6 extension to fix URL highlighting in Live Preview and Source Mode.",
+    "author": "Whitebox Engineer",
+    "isDesktopOnly": false
+}
